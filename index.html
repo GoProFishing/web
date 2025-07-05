@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoProFishing - Tu Tienda de Pesca Profesional con Asistente IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&display=swap');
+        
+        /* --- Fuentes y Estilos Generales --- */
+        * { font-family: 'Poppins', sans-serif; }
+        .hero-title { font-family: 'Playfair Display', serif; }
+
+        /* --- Sección Hero con Imagen de Fondo --- */
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+            background-color: #0f172a;
+        }
+        .hero-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.70); /* Capa oscura para legibilidad */
+            z-index: 2;
+        }
+        .hero-content { position: relative; z-index: 3; }
+
+        /* --- Animaciones y Efectos --- */
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .animate-pulse-slow { animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; z-index: 1000; animation: bounce 2.5s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
+
+        /* --- Tarjetas y Placeholders --- */
+        .product-card, .guarantee-card, .trip-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .product-card:hover, .guarantee-card:hover, .trip-card:hover { transform: translateY(-12px) scale(1.03); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2); }
+        .brand-logo-space {
+            background-color: #f8fafc; border: 2px dashed #e2e8f0; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center; padding: 0.5rem;
+        }
+        .brand-logo-space img { max-height: 100%; max-width: 100%; object-fit: contain; }
+        .brand-logo-space:hover { border-color: #3b82f6; transform: scale(1.05); }
+
+        /* --- Elementos de UI (Modales, Lightbox, etc.) --- */
+        .glass-effect { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6, #1d4ed8); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); }
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 0%; height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981); z-index: 3000;
+        }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
+        .modal-content {
+            background: #fff; margin: 10% auto; padding: 2rem; border-radius: 1rem; width: 90%;
+            max-width: 500px; position: relative; animation: modalSlideIn 0.4s ease-out;
+        }
+        @keyframes modalSlideIn { from { transform: translateY(-60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close { color: #999; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s; }
+        .close:hover { color: #333; }
+        .parallax-bg { background-attachment: fixed; background-size: cover; background-position: center; }
+        @media (max-width: 768px) { .parallax-bg { background-attachment: scroll; } }
+        
+        /* --- Loader para botón IA --- */
+        .loader {
+            width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent;
+            border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Lightbox para Galería --- */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); z-index: 4000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #lightbox.active { opacity: 1; visibility: visible; }
+        #lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 30px; font-size: 40px;
+            color: white; cursor: pointer;
+        }
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5); color: white;
+            padding: 10px 15px; border-radius: 50%; cursor: pointer;
+            font-size: 24px; user-select: none;
+        }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+
+        /* --- Animación de Scroll --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 overflow-x-hidden">
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Barra de Navegación -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-2">
+                <a href="#inicio">
+                    <img src="https://i.imgur.com/iaY5weI.png" alt="GoProFishing Logo" class="h-16">
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#inicio" class="text-white hover:text-cyan-300 transition-colors duration-300 font-medium">Inicio</a>
+                    <a href="#catalogo" class="text-white hover:text-cyan-300 transition-colors duration-300 font-medium">Catálogo</a>
+                    <a href="#asistente-ia" class="text-white hover:text-cyan-300 transition-colors duration-300 font-medium">Asistente IA</a>
+                    <a href="#salidas" class="text-white hover:text-cyan-300 transition-colors duration-300 font-medium">Salidas</a>
+                    <a href="#galeria" class="text-white hover:text-cyan-300 transition-colors duration-300 font-medium">Galería</a>
+                    <a href="#contacto" class="text-white hover:text-cyan-300 transition-colors duration-300 font-medium">Contacto</a>
+                </div>
+                <button class="md:hidden text-white text-2xl" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <div class="md:hidden hidden bg-slate-900/95 backdrop-blur-lg" id="mobileMenu">
+            <div class="px-4 py-6 space-y-4">
+                <a href="#inicio" class="block text-white text-center py-2 rounded-md hover:bg-cyan-500/20">Inicio</a>
+                <a href="#catalogo" class="block text-white text-center py-2 rounded-md hover:bg-cyan-500/20">Catálogo</a>
+                <a href="#asistente-ia" class="block text-white text-center py-2 rounded-md hover:bg-cyan-500/20">Asistente IA</a>
+                <a href="#salidas" class="block text-white text-center py-2 rounded-md hover:bg-cyan-500/20">Salidas</a>
+                <a href="#galeria" class="block text-white text-center py-2 rounded-md hover:bg-cyan-500/20">Galería</a>
+                <a href="#contacto" class="block text-white text-center py-2 rounded-md hover:bg-cyan-500/20">Contacto</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Ventanas Modales -->
+    <div id="catalogModal" class="modal"><div class="modal-content text-center"><span class="close" onclick="closeModal('catalogModal')">×</span><h2 class="text-3xl font-bold mb-4">Catálogo Completo</h2><p class="text-gray-600 mb-6">Para recibir nuestro catálogo completo con precios y ofertas especiales, contáctanos por WhatsApp. ¡Será un placer atenderte!</p><button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-lg" onclick="contactWhatsApp('catalogo')"><i class="fab fa-whatsapp mr-2"></i>Solicitar por WhatsApp</button></div></div>
+    <div id="reservaModal" class="modal"><div class="modal-content text-center"><span class="close" onclick="closeModal('reservaModal')">×</span><h2 class="text-3xl font-bold mb-4">Reservar Salida de Pesca</h2><p class="text-gray-600 mb-6">¿Listo para la aventura? Contáctanos por WhatsApp para verificar disponibilidad, resolver tus dudas y asegurar tu lugar en una de nuestras salidas.</p><button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-lg" onclick="contactWhatsApp('reserva')"><i class="fab fa-whatsapp mr-2"></i>Reservar por WhatsApp</button></div></div>
+
+    <!-- Lightbox de Galería -->
+    <div id="lightbox">
+        <span class="lightbox-close">×</span>
+        <img id="lightbox-img" src="">
+        <div class="lightbox-nav lightbox-prev">❮</div>
+        <div class="lightbox-nav lightbox-next">❯</div>
+    </div>
+
+    <!-- Botón Flotante de WhatsApp -->
+    <a href="https://wa.me/523223031581?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20GoProFishing." target="_blank" class="whatsapp-float"><div class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl flex items-center space-x-3 transition-all duration-300 group"><i class="fab fa-whatsapp text-3xl group-hover:scale-110"></i><div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse"><i class="fas fa-exclamation"></i></div></div></a>
+
+    <!-- SECCIÓN 1: INICIO / PORTADA -->
+    <section id="inicio" class="hero-bg min-h-screen flex items-center justify-center" style="background-image: url('https://i.imgur.com/Cxyl23s.jpeg'); background-size: cover; background-position: center;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content text-center text-white px-4 max-w-7xl mx-auto flex flex-col justify-center h-screen">
+            <div class="flex-grow flex flex-col justify-center">
+                <div class="animate-float">
+                    <h1 class="hero-title text-6xl md:text-8xl font-black mb-6">🎣 <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 bg-clip-text text-transparent animate-pulse-slow">Atrapa la Aventura</span></h1>
+                    <h2 class="hero-title text-4xl md:text-6xl font-bold mb-8">con GoProFishing</h2>
+                </div>
+                <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed font-light">Todo lo que necesitas para pescar como un profesional: equipo de élite, marcas líderes y salidas en lancha inolvidables.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12 max-w-4xl mx-auto">
+                    <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl" onclick="openModal('catalogModal')"><i class="fas fa-fish mr-3"></i>Ver Catálogo</button>
+                    <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl" onclick="openModal('reservaModal')"><i class="fas fa-ship mr-3"></i>Reservar Salida</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 pb-8">
+                <div class="glass-effect rounded-2xl p-4 md:p-6"><div class="stats-counter text-3xl md:text-4xl font-bold text-yellow-400 mb-2" data-target="500">0</div><p class="text-sm font-medium">Clientes Satisfechos</p></div>
+                <div class="glass-effect rounded-2xl p-4 md:p-6"><div class="stats-counter text-3xl md:text-4xl font-bold text-green-400 mb-2" data-target="1200">0</div><p class="text-sm font-medium">Productos Vendidos</p></div>
+                <div class="glass-effect rounded-2xl p-4 md:p-6"><div class="stats-counter text-3xl md:text-4xl font-bold text-blue-400 mb-2" data-target="150">0</div><p class="text-sm font-medium">Salidas Realizadas</p></div>
+                <div class="glass-effect rounded-2xl p-4 md:p-6"><div class="stats-counter text-3xl md:text-4xl font-bold text-purple-400 mb-2" data-target="8">0</div><p class="text-sm font-medium">Años de Experiencia</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: CATÁLOGO DE PRODUCTOS (MEJORADO) -->
+    <section id="catalogo" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <h2 class="hero-title text-5xl md:text-7xl font-black text-slate-800 mb-4">🛍️ Catálogo de Productos</h2>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Equipo de alto rendimiento y accesorios de calidad para todas las modalidades de pesca.</p>
+                <div class="mt-6 flex justify-center"><div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-1.5 w-32 rounded-full"></div></div>
+            </div>
+            
+            <div class="mb-20 reveal">
+                <h3 class="text-2xl font-bold text-center mb-8 text-slate-700">🏆 Marcas Líderes que Confían en Nosotros</h3>
+                <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/ibaxDhy.jpeg" alt="Shimano"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/LrY0Ebu.jpeg" alt="Daiwa"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/bh6YYTA.png" alt="Rapala"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/Ijh9huC.png" alt="Penn"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/9I7sCVC.png" alt="Abu Garcia"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/lBVmTaq.jpeg" alt="Okuma"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/FqErMhN.jpeg" alt="Savage Gear"></div>
+                    <div class="brand-logo-space rounded-xl h-24"><img src="https://i.imgur.com/ung1BMY.png" alt="Berkley"></div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="product-card bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col reveal">
+                    <img src="https://i.imgur.com/4f6wFov.jpeg" alt="Cañas de pescar" class="h-60 w-full object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-3">Cañas de Pescar</h3>
+                        <p class="text-slate-600 mb-4 flex-grow">Desde modelos para principiantes hasta cañas de grafito de alto módulo para profesionales.</p>
+                        <button class="w-full mt-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all" onclick="contactWhatsApp('cañas')">Ver Cañas</button>
+                    </div>
+                </div>
+                <div class="product-card bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col reveal">
+                    <img src="https://i.imgur.com/aGeqrms.jpeg" alt="Carretes de pesca" class="h-60 w-full object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-green-800 mb-3">Carretes</h3>
+                        <p class="text-slate-600 mb-4 flex-grow">Carretes de spinning, baitcasting y convencionales, diseñados para durar y rendir al máximo.</p>
+                        <button class="w-full mt-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-all" onclick="contactWhatsApp('carretes')">Ver Carretes</button>
+                    </div>
+                </div>
+                <div class="product-card bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col reveal">
+                    <img src="https://i.imgur.com/oLDJe2e.jpeg" alt="Señuelos de pesca" class="h-60 w-full object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-orange-800 mb-3">Señuelos y Carnadas</h3>
+                        <p class="text-slate-600 mb-4 flex-grow">Una vasta selección de señuelos duros, blandos y carnadas para atraer a cualquier especie.</p>
+                        <button class="w-full mt-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-all" onclick="contactWhatsApp('señuelos')">Ver Señuelos</button>
+                    </div>
+                </div>
+                <div class="product-card bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col reveal">
+                    <img src="https://i.imgur.com/iXhXiB4.jpeg" alt="Accesorios de pesca" class="h-60 w-full object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-purple-800 mb-3">Líneas y Accesorios</h3>
+                        <p class="text-slate-600 mb-4 flex-grow">Hilos trenzados, monofilamento, fluorocarbono, anzuelos, plomos y todas las herramientas que necesitas.</p>
+                        <button class="w-full mt-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition-all" onclick="contactWhatsApp('accesorios')">Ver Accesorios</button>
+                    </div>
+                </div>
+                <div class="product-card bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col reveal">
+                    <img src="https://i.imgur.com/jx5u3OH.jpeg" alt="Ropa de pesca" class="h-60 w-full object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-teal-800 mb-3">Ropa y Equipamiento</h3>
+                        <p class="text-slate-600 mb-4 flex-grow">Vístete para el éxito con nuestra ropa técnica con protección UV, lentes polarizados, hieleras y más.</p>
+                        <button class="w-full mt-auto bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition-all" onclick="contactWhatsApp('ropa')">Ver Ropa</button>
+                    </div>
+                </div>
+                 <div class="product-card bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col reveal">
+                    <img src="https://i.imgur.com/d7qVMPF.jpeg" alt="Kits de pesca" class="h-60 w-full object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-2xl font-bold text-red-800 mb-3">Kits Completos</h3>
+                        <p class="text-slate-600 mb-4 flex-grow">Combos listos para la acción. Kits completos para principiantes y expertos, todo en un solo paquete.</p>
+                        <button class="w-full mt-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-all" onclick="contactWhatsApp('kits')">Ver Kits</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- SECCIÓN 3: ASISTENTE DE PESCA IA -->
+    <section id="asistente-ia" class="py-24 bg-slate-100">
+        <div class="max-w-4xl mx-auto px-4 text-center reveal">
+            <h2 class="hero-title text-5xl md:text-7xl font-black text-slate-800 mb-4">🤖 Asistente de Pesca IA</h2>
+            <p class="text-xl text-slate-600 max-w-3xl mx-auto mb-10">¿No sabes qué equipo usar o necesitas un consejo? Pregúntale a nuestro asistente virtual potenciado por WeavyAgency.</p>
+            <div class="bg-white p-8 rounded-2xl shadow-xl">
+                <textarea id="ai-prompt" class="w-full p-4 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="Ej: ¿Qué equipo necesito para pescar robalo en la costa de Veracruz?"></textarea>
+                <div class="mt-2 flex flex-wrap gap-2 justify-center">
+                    <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">Tips para pescar dorado</button>
+                    <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">¿Caña ligera o pesada?</button>
+                    <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">Mejor señuelo para lobina</button>
+                </div>
+                <button id="ai-submit" class="mt-4 w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white font-bold py-4 px-10 rounded-xl text-xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+                    <span id="ai-button-text">Obtener Recomendación</span>
+                    <span id="ai-loader" class="hidden loader"></span>
+                </button>
+                <div id="ai-result" class="mt-6 text-left p-6 bg-slate-50 rounded-lg border border-slate-200" style="display: none;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 4: SALIDAS DE PESCA (CORREGIDA) -->
+    <section id="salidas" class="py-24 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 reveal">
+            <div class="text-center mb-16">
+                 <h2 class="hero-title text-5xl md:text-7xl font-black text-white mb-4">🚤 Salidas de Pesca Guiadas</h2>
+                 <p class="text-xl text-cyan-300 max-w-3xl mx-auto">Vive la experiencia GoProFishing en alta mar con nuestros capitanes expertos.</p>
+            </div>
+            
+            <div class="mb-12">
+                <img src="https://i.imgur.com/pwxkTsW.jpeg" class="block rounded-2xl shadow-2xl w-full h-auto max-h-[600px] object-cover" alt="Pescador mostrando su gran captura en un barco">
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-stretch">
+                <!-- Paquete 1: Medio Día -->
+                <div class="trip-card bg-slate-800 rounded-2xl p-8 text-white flex flex-col border border-slate-700">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-3xl font-bold text-cyan-300">Medio Día</h3>
+                            <p class="text-lg text-slate-300">(4 horas)</p>
+                        </div>
+                        <div class="text-4xl font-black text-white">$2,500</div>
+                    </div>
+                    <p class="my-4 text-slate-300 flex-grow">Ideal para una pesca rápida y efectiva. Perfecto para principiantes y familias.</p>
+                    <div class="border-t border-white/20 my-4"></div>
+                    <ul class="space-y-2 text-left mb-6">
+                        <li class="flex items-center"><i class="fas fa-check text-cyan-400 w-6"></i>Equipo de pesca completo</li>
+                        <li class="flex items-center"><i class="fas fa-check text-cyan-400 w-6"></i>Guía y capitán experto</li>
+                        <li class="flex items-center"><i class="fas fa-check text-cyan-400 w-6"></i>Bebidas y snacks</li>
+                    </ul>
+                    <button class="w-full mt-auto bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold py-3 rounded-lg transition-all text-lg" onclick="openModal('reservaModal')">Reservar Medio Día</button>
+                </div>
+                <!-- Paquete 2: Día Completo -->
+                <div class="trip-card bg-slate-800 rounded-2xl p-8 text-white border-2 border-cyan-400 shadow-2xl relative flex flex-col">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-cyan-400 text-slate-900 font-bold px-4 py-1 rounded-full text-sm">MÁS POPULAR</div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-3xl font-bold text-cyan-300">Día Completo</h3>
+                            <p class="text-lg text-slate-300">(8 horas)</p>
+                        </div>
+                        <div class="text-4xl font-black text-white">$4,900</div>
+                    </div>
+                    <p class="my-4 text-slate-300 flex-grow">La experiencia total. Explora los mejores puntos de pesca en aguas profundas y busca las grandes capturas.</p>
+                    <div class="border-t border-white/20 my-4"></div>
+                    <ul class="space-y-2 text-left mb-6">
+                        <li class="flex items-center"><i class="fas fa-star text-yellow-400 w-6"></i><strong class="mr-2">Todo lo del paquete de Medio Día, y además:</strong></li>
+                        <li class="flex items-center"><i class="fas fa-plus text-green-400 w-6"></i>Almuerzo ligero (ceviche fresco)</li>
+                        <li class="flex items-center"><i class="fas fa-plus text-green-400 w-6"></i>Señuelos premium para trofeos</li>
+                        <li class="flex items-center"><i class="fas fa-plus text-green-400 w-6"></i>Limpieza y fileteado de tu pesca</li>
+                    </ul>
+                    <button class="w-full mt-auto bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-bold py-3 rounded-lg transition-all text-lg" onclick="openModal('reservaModal')">Reservar Día Completo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 5: GALERÍA -->
+    <section id="galeria" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 reveal">
+            <div class="text-center mb-16">
+                <h2 class="hero-title text-5xl md:text-7xl font-black text-slate-800 mb-4">📸 Galería de Trofeos</h2>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Nuestros clientes son los verdaderos protagonistas. ¡Estas son sus capturas!</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 gallery-container">
+                <a href="https://i.imgur.com/BYZgHwE.jpeg" class="gallery-item block overflow-hidden rounded-xl shadow-lg"><img src="https://i.imgur.com/BYZgHwE.jpeg" alt="Cliente con gran captura" class="h-64 w-full object-cover transform hover:scale-110 transition-transform duration-300"></a>
+                <a href="https://i.imgur.com/Lokk36u.jpeg" class="gallery-item block overflow-hidden rounded-xl shadow-lg md:col-span-2"><img src="https://i.imgur.com/Lokk36u.jpeg" alt="Pescador con su captura" class="h-64 w-full object-cover transform hover:scale-110 transition-transform duration-300"></a>
+                <a href="https://i.imgur.com/F8kJoAR.jpeg" class="gallery-item block overflow-hidden rounded-xl shadow-lg"><img src="https://i.imgur.com/F8kJoAR.jpeg" alt="Pescando al atardecer" class="h-64 w-full object-cover transform hover:scale-110 transition-transform duration-300"></a>
+                <a href="https://i.imgur.com/2l1GJeX.png" class="gallery-item block overflow-hidden rounded-xl shadow-lg md:col-span-2"><img src="https://i.imgur.com/2l1GJeX.png" alt="Grupo de amigos pescando" class="h-64 w-full object-cover transform hover:scale-110 transition-transform duration-300"></a>
+                <a href="https://i.imgur.com/EGCLtOM.jpeg" class="gallery-item block overflow-hidden rounded-xl shadow-lg"><img src="https://i.imgur.com/EGCLtOM.jpeg" alt="Pescado recién capturado" class="h-64 w-full object-cover transform hover:scale-110 transition-transform duration-300"></a>
+                <a href="https://i.imgur.com/9EKhGxQ.jpeg" class="gallery-item block overflow-hidden rounded-xl shadow-lg"><img src="https://i.imgur.com/9EKhGxQ.jpeg" alt="Lancha en el mar" class="h-64 w-full object-cover transform hover:scale-110 transition-transform duration-300"></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 6: GARANTÍA Y CONFIANZA -->
+    <section id="garantia" class="py-24 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 reveal">
+            <div class="text-center mb-16">
+                <h2 class="hero-title text-5xl md:text-7xl font-black text-slate-800 mb-4">🛡️ Nuestra Garantía y Confianza</h2>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Nos respaldan años de experiencia y una pasión inquebrantable por la pesca.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <div class="guarantee-card bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <div class="text-5xl text-blue-500 mb-4">✅</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Garantía de Fábrica</h3>
+                    <p class="text-slate-500">Todos nuestros productos cuentan con garantía oficial del fabricante.</p>
+                </div>
+                <div class="guarantee-card bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <div class="text-5xl text-green-500 mb-4">🏆</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Productos 100% Originales</h3>
+                    <p class="text-slate-500">Trabajamos directamente con distribuidores autorizados.</p>
+                </div>
+                <div class="guarantee-card bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <div class="text-5xl text-purple-500 mb-4">👨‍🏫</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Asesoría Personalizada</h3>
+                    <p class="text-slate-500">Nuestros expertos te ayudan a elegir el equipo perfecto para ti.</p>
+                </div>
+                <div class="guarantee-card bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <div class="text-5xl text-orange-500 mb-4">🚚</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Envíos a todo México</h3>
+                    <p class="text-slate-500">Entrega rápida y segura en toda la República Mexicana.</p>
+                </div>
+                <div class="guarantee-card bg-white p-8 rounded-2xl shadow-lg text-center md:col-span-2 lg:col-span-2">
+                    <div class="text-5xl text-teal-500 mb-4">📞</div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Seguimiento Posventa</h3>
+                    <p class="text-slate-500">Te acompañamos después de tu compra para asegurar tu satisfacción total.</p>
+                </div>
+            </div>
+             <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-slate-600">
+                <div><div class="text-4xl font-bold text-blue-600">8+</div><p>Años de experiencia</p></div>
+                <div><div class="text-4xl font-bold text-green-600">500+</div><p>Clientes satisfechos</p></div>
+                <div><div class="text-4xl font-bold text-purple-600">15+</div><p>Marcas premium</p></div>
+                <div><div class="text-4xl font-bold text-orange-600">99%</div><p>Índice de recomendación</p></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- SECCIÓN 7: CONTACTO Y MAPA -->
+    <section id="contacto" class="py-24 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 reveal">
+            <div class="text-center mb-16">
+                <h2 class="hero-title text-5xl md:text-7xl font-black text-white mb-4">¿Listo para tu Aventura?</h2>
+                <p class="text-xl text-slate-300 max-w-3xl mx-auto">Visítanos o contáctanos. Nuestro equipo de expertos está listo para asesorarte y preparar tu próxima gran experiencia de pesca.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Columna de Información -->
+                <div class="text-white text-center lg:text-left">
+                    <div class="mb-8">
+                        <h3 class="text-3xl font-bold text-cyan-400 mb-2">Nuestra Ubicación</h3>
+                        <p class="text-slate-300">Av. Independencia 39, 48869 Pérula, Jal.</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-3xl font-bold text-cyan-400 mb-2">Horario de Atención</h3>
+                        <p class="text-slate-300">Lunes a Sábado: 9:00 AM - 7:00 PM</p>
+                    </div>
+                    <button class="w-full lg:w-auto bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white font-bold py-5 px-10 rounded-xl text-xl shadow-lg transform hover:scale-105 transition-transform duration-300" onclick="contactWhatsApp('general')">
+                        <i class="fas fa-ship mr-3"></i>Hablar con el Capitán
+                    </button>
+                </div>
+                <!-- Columna del Mapa -->
+                <div class="h-96 w-full rounded-2xl overflow-hidden shadow-2xl">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3758.336657980971!2d-104.99120502478498!3d19.61234987979601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842385c070119335%3A0x95971485a3a73c1d!2sAv.%20Independencia%2039%2C%2048869%20P%C3%A9rula%2C%20Jal.!5e0!3m2!1ses-419!2smx!4v1720056156381!5m2!1ses-419!2smx" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-white py-12">
+        <div class="max-w-7xl mx-auto text-center px-4">
+            <a href="#inicio">
+                <img src="https://i.imgur.com/Y5WLWIh.png" alt="GoProFishing Logo" class="h-16 mx-auto mb-4">
+            </a>
+            <p class="text-slate-400">&copy; 2025 GoProFishing. Todos los derechos reservados.</p>
+            <p class="text-sm text-slate-500 mt-2">Tu aventura en alta mar comienza aquí.</p>
+            <p class="text-sm text-slate-500 mt-4">
+                Powered by <a href="https://weavyagency.store" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300">weavyagency.store</a>
+            </p>
+        </div>
+    </footer>
+    
+    <!-- SCRIPT JAVASCRIPT PARA TODA LA FUNCIONALIDAD -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const WHATSAPP_NUMBER = '523223031581'; // ¡IMPORTANTE! Reemplaza con tu número de WhatsApp real
+
+            // --- Elementos del DOM ---
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navbar = document.getElementById('navbar');
+            const progressBar = document.getElementById('progressBar');
+            const aiSubmitBtn = document.getElementById('ai-submit');
+            const aiPromptInput = document.getElementById('ai-prompt');
+            const aiResultDiv = document.getElementById('ai-result');
+            const aiButtonText = document.getElementById('ai-button-text');
+            const aiLoader = document.getElementById('ai-loader');
+
+            // --- Menú móvil ---
+            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+            // --- Estilo de la barra de navegación al hacer scroll ---
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-slate-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                } else {
+                    navbar.classList.remove('bg-slate-900/80', 'backdrop-blur-sm', 'shadow-lg');
+                }
+            });
+
+            // --- Barra de progreso de scroll ---
+            window.addEventListener('scroll', () => {
+                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = (window.scrollY / scrollableHeight) * 100;
+                progressBar.style.width = `${scrolled}%`;
+            });
+
+            // --- Animación de contadores ---
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = +counter.getAttribute('data-target');
+                        let count = 0;
+                        const speed = 100;
+                        const increment = target / speed;
+                        
+                        const updateCount = () => {
+                            if (count < target) {
+                                count += increment;
+                                counter.innerText = Math.ceil(count).toLocaleString('es-MX');
+                                setTimeout(updateCount, 15);
+                            } else {
+                                counter.innerText = target.toLocaleString('es-MX');
+                            }
+                        };
+                        updateCount();
+                        observer.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.7 });
+            document.querySelectorAll('.stats-counter').forEach(c => counterObserver.observe(c));
+
+            // --- Scroll suave para anclas y cierre de menú ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(this.getAttribute('href'));
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // --- Funciones de Modales ---
+            window.openModal = (modalId) => document.getElementById(modalId).style.display = 'block';
+            window.closeModal = (modalId) => document.getElementById(modalId).style.display = 'none';
+            window.onclick = (event) => { if (event.target.classList.contains('modal')) event.target.style.display = "none"; };
+            
+            // --- Función de WhatsApp ---
+            window.contactWhatsApp = (topic) => {
+                let message = "Hola, quisiera más información sobre GoProFishing.";
+                const topics = {
+                    'catalogo': 'su catálogo completo',
+                    'reserva': 'reservar una salida de pesca',
+                    'cañas': 'sus cañas de pescar',
+                    'carretes': 'sus carretes',
+                    'señuelos': 'sus señuelos',
+                    'accesorios': 'sus líneas y accesorios',
+                    'ropa': 'su ropa y equipamiento',
+                    'kits': 'sus kits completos',
+                    'general': 'sus productos y servicios'
+                };
+                if (topic && topics[topic]) {
+                    message = `Hola, estoy interesado en obtener más información sobre ${topics[topic]}.`;
+                }
+                window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+            };
+
+            // --- Asistente de Pesca IA (Gemini API) ---
+            aiSubmitBtn.addEventListener('click', getFishingTip);
+            document.querySelectorAll('.ai-example-prompt').forEach(button => {
+                button.addEventListener('click', () => {
+                    aiPromptInput.value = button.textContent;
+                    getFishingTip();
+                });
+            });
+
+            async function getFishingTip() {
+                const userPrompt = aiPromptInput.value.trim();
+                if (!userPrompt) {
+                    alert('Por favor, escribe tu pregunta para el asistente.');
+                    return;
+                }
+
+                aiButtonText.classList.add('hidden');
+                aiLoader.classList.remove('hidden');
+                aiSubmitBtn.disabled = true;
+                aiResultDiv.style.display = 'none';
+
+                const fullPrompt = `Eres "GoProFishing AI", un asistente experto en pesca deportiva en México. Un cliente pregunta: "${userPrompt}". Proporciona una recomendación amigable y útil sobre el equipo (caña, carrete, línea, señuelos) y algunos consejos breves para tener éxito. Sé conciso y directo. Termina mencionando que pueden encontrar todo el equipo recomendado en la tienda GoProFishing. Formatea tu respuesta con negritas para los títulos y viñetas para las listas.`;
+
+                try {
+                    let chatHistory = [{ role: "user", parts: [{ text: fullPrompt }] }];
+                    const payload = { contents: chatHistory };
+                    const apiKey = "AIzaSyDpjJsFDiGj8zoVJOEklJb7keJaX6IAvl8"; // API Key
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates[0]?.content?.parts?.[0]) {
+                        const rawText = result.candidates[0].content.parts[0].text;
+                        let htmlText = rawText
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/^\* (.*$)/gm, '<li class="list-disc ml-5">$1</li>');
+                        
+                        aiResultDiv.innerHTML = htmlText.replace(/\n/g, '<br>');
+                        aiResultDiv.style.display = 'block';
+                    } else {
+                        aiResultDiv.innerText = 'No se pudo obtener una respuesta. Por favor, intenta de nuevo.';
+                        aiResultDiv.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    aiResultDiv.innerText = 'Ocurrió un error al contactar al asistente. Por favor, intenta más tarde.';
+                    aiResultDiv.style.display = 'block';
+                } finally {
+                    aiButtonText.classList.remove('hidden');
+                    aiLoader.classList.add('hidden');
+                    aiSubmitBtn.disabled = false;
+                }
+            }
+
+            // --- Galería Lightbox ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            let currentIndex = 0;
+
+            galleryItems.forEach((item, index) => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentIndex = index;
+                    updateLightboxImage();
+                    lightbox.classList.add('active');
+                });
+            });
+
+            function updateLightboxImage() {
+                lightboxImg.src = galleryItems[currentIndex].href;
+            }
+
+            document.querySelector('.lightbox-close').addEventListener('click', () => {
+                lightbox.classList.remove('active');
+            });
+
+            document.querySelector('.lightbox-prev').addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                updateLightboxImage();
+            });
+
+            document.querySelector('.lightbox-next').addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % galleryItems.length;
+                updateLightboxImage();
+            });
+
+            // --- Animación de Scroll ---
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(elem => {
+                revealObserver.observe(elem);
+            });
+        });
+    </script>
+</body>
+</html>
