@@ -158,8 +158,8 @@
         <div class="hero-content text-center text-white px-4 max-w-7xl mx-auto flex flex-col justify-center h-screen">
             <div class="flex-grow flex flex-col justify-center">
                 <div class="animate-float">
-                    <h1 class="hero-title text-6xl md:text-8xl font-black mb-6">🎣 <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 bg-clip-text text-transparent animate-pulse-slow">Atrapa la Aventura</span></h1>
-                    <h2 class="hero-title text-4xl md:text-6xl font-bold mb-8">con GoProFishing</h2>
+                    <h1 class="hero-title text-6xl md:text-8xl font-black mb-4">🎣 <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 bg-clip-text text-transparent animate-pulse-slow">Atrapa la Aventura</span></h1>
+                    <h3 class="text-2xl md:text-3xl font-semibold text-cyan-200 tracking-widest mb-8"><i class="fas fa-map-marker-alt mr-2"></i>Pérula, Jalisco</h3>
                 </div>
                 <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed font-light">Todo lo que necesitas para pescar como un profesional: equipo de élite, marcas líderes y salidas en lancha inolvidables.</p>
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12 max-w-4xl mx-auto">
@@ -258,7 +258,7 @@
             <h2 class="hero-title text-5xl md:text-7xl font-black text-slate-800 mb-4">🤖 Asistente de Pesca IA</h2>
             <p class="text-xl text-slate-600 max-w-3xl mx-auto mb-10">¿No sabes qué equipo usar o necesitas un consejo? Pregúntale a nuestro asistente virtual potenciado por WeavyAgency.</p>
             <div class="bg-white p-8 rounded-2xl shadow-xl">
-                <textarea id="ai-prompt" class="w-full p-4 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="Ej: ¿Qué equipo necesito para pescar robalo en la costa de Veracruz?"></textarea>
+                <textarea id="ai-prompt" class="w-full p-4 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="Ej: ¿Qué equipo necesito para pescar robalo en Perula o Barra de Navidad?"></textarea>
                 <div class="mt-2 flex flex-wrap gap-2 justify-center">
                     <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">Tips para pescar dorado</button>
                     <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">¿Caña ligera o pesada?</button>
@@ -293,7 +293,7 @@
                             <h3 class="text-3xl font-bold text-cyan-300">Medio Día</h3>
                             <p class="text-lg text-slate-300">(4 horas)</p>
                         </div>
-                        <div class="text-4xl font-black text-white">$2,500</div>
+                        <div class="text-4xl font-black text-white">Consultar</div>
                     </div>
                     <p class="my-4 text-slate-300 flex-grow">Ideal para una pesca rápida y efectiva. Perfecto para principiantes y familias.</p>
                     <div class="border-t border-white/20 my-4"></div>
@@ -302,7 +302,7 @@
                         <li class="flex items-center"><i class="fas fa-check text-cyan-400 w-6"></i>Guía y capitán experto</li>
                         <li class="flex items-center"><i class="fas fa-check text-cyan-400 w-6"></i>Bebidas y snacks</li>
                     </ul>
-                    <button class="w-full mt-auto bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold py-3 rounded-lg transition-all text-lg" onclick="openModal('reservaModal')">Reservar Medio Día</button>
+                    <button class="w-full mt-auto bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold py-3 rounded-lg transition-all text-lg" onclick="contactWhatsApp('salida_medio_dia')">Consultar por WhatsApp</button>
                 </div>
                 <!-- Paquete 2: Día Completo -->
                 <div class="trip-card bg-slate-800 rounded-2xl p-8 text-white border-2 border-cyan-400 shadow-2xl relative flex flex-col">
@@ -312,7 +312,7 @@
                             <h3 class="text-3xl font-bold text-cyan-300">Día Completo</h3>
                             <p class="text-lg text-slate-300">(8 horas)</p>
                         </div>
-                        <div class="text-4xl font-black text-white">$4,900</div>
+                        <div class="text-4xl font-black text-white">Consultar</div>
                     </div>
                     <p class="my-4 text-slate-300 flex-grow">La experiencia total. Explora los mejores puntos de pesca en aguas profundas y busca las grandes capturas.</p>
                     <div class="border-t border-white/20 my-4"></div>
@@ -322,7 +322,7 @@
                         <li class="flex items-center"><i class="fas fa-plus text-green-400 w-6"></i>Señuelos premium para trofeos</li>
                         <li class="flex items-center"><i class="fas fa-plus text-green-400 w-6"></i>Limpieza y fileteado de tu pesca</li>
                     </ul>
-                    <button class="w-full mt-auto bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-bold py-3 rounded-lg transition-all text-lg" onclick="openModal('reservaModal')">Reservar Día Completo</button>
+                    <button class="w-full mt-auto bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-bold py-3 rounded-lg transition-all text-lg" onclick="contactWhatsApp('salida_dia_completo')">Consultar por WhatsApp</button>
                 </div>
             </div>
         </div>
@@ -559,7 +559,7 @@
                 try {
                     let chatHistory = [{ role: "user", parts: [{ text: fullPrompt }] }];
                     const payload = { contents: chatHistory };
-                    const apiKey = "AIzaSyDpjJsFDiGj8zoVJOEklJb7keJaX6IAvl8"; // API Key
+                    const apiKey = "AIzaSyDpjJsFDiGj8zoVJOEklJb7keJaX6IAvl8";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
