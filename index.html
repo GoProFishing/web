@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoProFishing - Tu Tienda de Pesca Profesional en Perula Jalisco</title>
+    <title>GoProFishing - Tu Tienda de Pesca Profesional con Asistente IA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -13,11 +13,21 @@
         * { font-family: 'Poppins', sans-serif; }
         .hero-title { font-family: 'Playfair Display', serif; }
 
-        /* --- Sección Hero con Imagen de Fondo --- */
+        /* --- Sección Hero con Imagen de Fondo y Efecto Ken Burns --- */
         .hero-bg {
             position: relative;
             overflow: hidden;
             background-color: #0f172a;
+        }
+        .hero-bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            animation: kenburns 20s ease-in-out infinite alternate;
+        }
+        @keyframes kenburns {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(2%, -2%); }
         }
         .hero-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -53,8 +63,8 @@
         }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
         .modal-content {
-            background: #fff; margin: 10% auto; padding: 2rem; border-radius: 1rem; width: 90%;
-            max-width: 500px; position: relative; animation: modalSlideIn 0.4s ease-out;
+            background: #fff; margin: 5% auto; padding: 2rem; border-radius: 1rem; width: 90%;
+            max-width: 600px; position: relative; animation: modalSlideIn 0.4s ease-out;
         }
         @keyframes modalSlideIn { from { transform: translateY(-60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close { color: #999; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s; }
@@ -101,6 +111,22 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* --- FAQ Accordion --- */
+        .faq-item .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* Ajusta este valor si la respuesta es más larga */
+        }
+        .faq-item .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="bg-slate-50 overflow-x-hidden">
@@ -140,6 +166,7 @@
     <!-- Ventanas Modales -->
     <div id="catalogModal" class="modal"><div class="modal-content text-center"><span class="close" onclick="closeModal('catalogModal')">×</span><h2 class="text-3xl font-bold mb-4">Catálogo Completo</h2><p class="text-gray-600 mb-6">Para recibir nuestro catálogo completo con precios y ofertas especiales, contáctanos por WhatsApp. ¡Será un placer atenderte!</p><button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-lg" onclick="contactWhatsApp('catalogo')"><i class="fab fa-whatsapp mr-2"></i>Solicitar por WhatsApp</button></div></div>
     <div id="reservaModal" class="modal"><div class="modal-content text-center"><span class="close" onclick="closeModal('reservaModal')">×</span><h2 class="text-3xl font-bold mb-4">Reservar Salida de Pesca</h2><p class="text-gray-600 mb-6">¿Listo para la aventura? Contáctanos por WhatsApp para verificar disponibilidad, resolver tus dudas y asegurar tu lugar en una de nuestras salidas.</p><button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-lg" onclick="contactWhatsApp('reserva')"><i class="fab fa-whatsapp mr-2"></i>Reservar por WhatsApp</button></div></div>
+    <div id="videoModal" class="modal"><div class="modal-content !p-0 !max-w-4xl"><div class="aspect-w-16 aspect-h-9"><iframe id="video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></div></div>
 
     <!-- Lightbox de Galería -->
     <div id="lightbox">
@@ -153,9 +180,10 @@
     <a href="https://wa.me/523223031581?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20GoProFishing." target="_blank" class="whatsapp-float"><div class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl flex items-center space-x-3 transition-all duration-300 group"><i class="fab fa-whatsapp text-3xl group-hover:scale-110"></i><div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse"><i class="fas fa-exclamation"></i></div></div></a>
 
     <!-- SECCIÓN 1: INICIO / PORTADA -->
-    <section id="inicio" class="hero-bg min-h-screen flex items-center justify-center" style="background-image: url('https://i.imgur.com/Cxyl23s.jpeg'); background-size: cover; background-position: center;">
+    <section id="inicio" class="hero-bg min-h-screen flex items-center justify-center">
+        <div class="hero-bg-image" style="background-image: url('https://i.imgur.com/Cxyl23s.jpeg');"></div>
         <div class="hero-overlay"></div>
-        <div class="hero-content text-center text-white px-4 max-w-7xl mx-auto flex flex-col justify-center h-screen">
+        <div class="hero-content text-center text-white px-4 max-w-7xl mx-auto flex flex-col justify-center min-h-screen">
             <div class="flex-grow flex flex-col justify-center">
                 <div class="animate-float">
                     <h1 class="hero-title text-6xl md:text-8xl font-black mb-4">🎣 <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 bg-clip-text text-transparent animate-pulse-slow">Atrapa la Aventura</span></h1>
@@ -258,7 +286,7 @@
             <h2 class="hero-title text-5xl md:text-7xl font-black text-slate-800 mb-4">🤖 Asistente de Pesca IA</h2>
             <p class="text-xl text-slate-600 max-w-3xl mx-auto mb-10">¿No sabes qué equipo usar o necesitas un consejo? Pregúntale a nuestro asistente virtual potenciado por WeavyAgency.</p>
             <div class="bg-white p-8 rounded-2xl shadow-xl">
-                <textarea id="ai-prompt" class="w-full p-4 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="Ej: ¿Qué equipo necesito para pescar robalo en Perula o Barra de Navidad?"></textarea>
+                <textarea id="ai-prompt" class="w-full p-4 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" rows="3" placeholder="Ej: ¿Qué equipo necesito para pescar robalo en la costa de Veracruz?"></textarea>
                 <div class="mt-2 flex flex-wrap gap-2 justify-center">
                     <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">Tips para pescar dorado</button>
                     <button class="ai-example-prompt bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm hover:bg-slate-300">¿Caña ligera o pesada?</button>
