@@ -13,21 +13,11 @@
         * { font-family: 'Poppins', sans-serif; }
         .hero-title { font-family: 'Playfair Display', serif; }
 
-        /* --- Sección Hero con Imagen de Fondo y Efecto Ken Burns --- */
+        /* --- Sección Hero con Imagen de Fondo --- */
         .hero-bg {
             position: relative;
             overflow: hidden;
             background-color: #0f172a;
-        }
-        .hero-bg-image {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover;
-            background-position: center;
-            animation: kenburns 20s ease-in-out infinite alternate;
-        }
-        @keyframes kenburns {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.1) translate(2%, -2%); }
         }
         .hero-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -111,22 +101,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* --- FAQ Accordion --- */
-        .faq-item .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
-        }
-        .faq-item.active .faq-answer {
-            max-height: 200px; /* Ajusta este valor si la respuesta es más larga */
-        }
-        .faq-item .faq-toggle {
-            transition: transform 0.3s ease;
-        }
-        .faq-item.active .faq-toggle {
-            transform: rotate(180deg);
-        }
     </style>
 </head>
 <body class="bg-slate-50 overflow-x-hidden">
@@ -180,27 +154,25 @@
     <a href="https://wa.me/523223031581?text=Hola%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20GoProFishing." target="_blank" class="whatsapp-float"><div class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl flex items-center space-x-3 transition-all duration-300 group"><i class="fab fa-whatsapp text-3xl group-hover:scale-110"></i><div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse"><i class="fas fa-exclamation"></i></div></div></a>
 
     <!-- SECCIÓN 1: INICIO / PORTADA (CORREGIDA PARA MÓVIL) -->
-    <section id="inicio" class="hero-bg min-h-screen flex items-center" style="background-image: url('https://i.imgur.com/Cxyl23s.jpeg');">
+    <section id="inicio" class="hero-bg min-h-screen flex items-center justify-center" style="background-image: url('https://i.imgur.com/Cxyl23s.jpeg'); background-size: cover; background-position: center;">
         <div class="hero-overlay"></div>
-        <div class="hero-content text-center text-white px-4 max-w-7xl mx-auto w-full">
-            <div class="flex flex-col justify-center min-h-screen py-16">
-                <div class="flex-grow flex flex-col justify-center">
-                    <div class="animate-float">
-                        <h1 class="hero-title text-6xl md:text-8xl font-black mb-4">🎣 <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 bg-clip-text text-transparent animate-pulse-slow">Atrapa la Aventura</span></h1>
-                        <h3 class="text-2xl md:text-3xl font-semibold text-cyan-200 tracking-widest mb-8"><i class="fas fa-map-marker-alt mr-2"></i>Pérula, Jalisco</h3>
-                    </div>
-                    <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed font-light">Todo lo que necesitas para pescar como un profesional: equipo de élite, marcas líderes y salidas en lancha inolvidables.</p>
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12 max-w-4xl mx-auto">
-                        <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl" onclick="openModal('catalogModal')"><i class="fas fa-fish mr-3"></i>Ver Catálogo</button>
-                        <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl" onclick="openModal('reservaModal')"><i class="fas fa-ship mr-3"></i>Reservar Salida</button>
-                    </div>
+        <div class="hero-content text-center text-white px-4 max-w-7xl mx-auto flex flex-col justify-center min-h-screen py-16">
+            <div class="flex-grow flex flex-col justify-center">
+                <div class="animate-float">
+                    <h1 class="hero-title text-6xl md:text-8xl font-black mb-4">🎣 <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 bg-clip-text text-transparent animate-pulse-slow">Atrapa la Aventura</span></h1>
+                    <h3 class="text-2xl md:text-3xl font-semibold text-cyan-200 tracking-widest mb-8"><i class="fas fa-map-marker-alt mr-2"></i>Pérula, Jalisco</h3>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-8">
-                    <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-yellow-400 mb-2" data-target="500">0</div><p class="text-sm font-medium">Clientes Satisfechos</p></div>
-                    <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-green-400 mb-2" data-target="1200">0</div><p class="text-sm font-medium">Productos Vendidos</p></div>
-                    <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-blue-400 mb-2" data-target="150">0</div><p class="text-sm font-medium">Salidas Realizadas</p></div>
-                    <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-purple-400 mb-2" data-target="8">0</div><p class="text-sm font-medium">Años de Experiencia</p></div>
+                <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed font-light">Todo lo que necesitas para pescar como un profesional: equipo de élite, marcas líderes y salidas en lancha inolvidables.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12 max-w-4xl mx-auto">
+                    <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl" onclick="openModal('catalogModal')"><i class="fas fa-fish mr-3"></i>Ver Catálogo</button>
+                    <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl text-lg font-bold shadow-2xl" onclick="openModal('reservaModal')"><i class="fas fa-ship mr-3"></i>Reservar Salida</button>
                 </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-8">
+                <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-yellow-400 mb-2" data-target="500">0</div><p class="text-sm font-medium">Clientes Satisfechos</p></div>
+                <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-green-400 mb-2" data-target="1200">0</div><p class="text-sm font-medium">Productos Vendidos</p></div>
+                <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-blue-400 mb-2" data-target="150">0</div><p class="text-sm font-medium">Salidas Realizadas</p></div>
+                <div class="glass-effect rounded-2xl p-4"><div class="stats-counter text-3xl md:text-4xl font-bold text-purple-400 mb-2" data-target="8">0</div><p class="text-sm font-medium">Años de Experiencia</p></div>
             </div>
         </div>
     </section>
@@ -456,11 +428,7 @@
             </a>
             <p class="text-slate-400">&copy; 2025 GoProFishing. Todos los derechos reservados.</p>
             <p class="text-sm text-slate-500 mt-2">Tu aventura en alta mar comienza aquí.</p>
-            <p class="text-sm text-slate-500 mt-4">
-                Powered by <a href="https://weavyagency.store" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300">weavyagency.store</a>
-            </p>
-        </div>
-    </footer>
+        </footer>
     
     <!-- SCRIPT JAVASCRIPT PARA TODA LA FUNCIONALIDAD -->
     <script>
